@@ -1,22 +1,15 @@
+import { useContext } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
-import { useLayoutEffect } from "react";
 import { MEALS } from "../data/meal-data";
-import { CATEGORIES } from "../data/dummy-data";
 import MealItem from "../components/MealItem";
+import { FavoritesContext } from "../store/context/favorites-context";
 
-function MealsOverviewScreen({ route, navigation }) {
-  const catId = route.params.categoryId;
-  const displayedMeals = MEALS.filter((mealItem) => {
-    return mealItem.categoryIds.indexOf(catId) >= 0;
-  });
-  useLayoutEffect(() => {
-    const categoryTitle = CATEGORIES.find(
-      (category) => category.id === catId,
-    ).title;
-    navigation.setOptions({
-      title: categoryTitle,
-    });
-  }, [catId, navigation]);
+function FavoritesScreen() {
+  const favoriteMealsCtx = useContext(FavoritesContext);
+
+  const favoriteMeals = MEALS.filter((meal) =>
+    favoriteMealsCtx.ids.includes(meal.id),
+  );
 
   function renderMealItem(itemData) {
     const item = itemData.item;
@@ -33,21 +26,39 @@ function MealsOverviewScreen({ route, navigation }) {
     return <MealItem {...mealItemProps} />;
   }
 
+  if (favoriteMeals.length === 0) {
+    return (
+      <View style={styles.rootContainer}>
+        <Text style={styles.text}>You have no favorite meals yet.</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={displayedMeals}
+        data={favoriteMeals}
         renderItem={renderMealItem}
         keyExtractor={(item) => item.id}
       />
     </View>
   );
 }
-export default MealsOverviewScreen;
+
+export default FavoritesScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+  },
+  rootContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  text: {
+    color: "white",
+    fontSize: 16,
   },
 });
