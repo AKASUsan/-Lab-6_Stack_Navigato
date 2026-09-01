@@ -12,8 +12,9 @@ import FavoritesScreen from "./screens/FavoritesScreen";
 import FavoritesContextProvider from "./store/context/favorites-context";
 import { Ionicons } from "@expo/vector-icons";
 
-const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
+const Stack = createNativeStackNavigator();
+
 function DrawerNavigator() {
   return (
     <Drawer.Navigator
@@ -33,6 +34,7 @@ function DrawerNavigator() {
           ),
         }}
       />
+
       <Drawer.Screen
         name="FavoriteMealScreen"
         component={FavoritesScreen}
@@ -43,6 +45,7 @@ function DrawerNavigator() {
           ),
         }}
       />
+      
     </Drawer.Navigator>
   );
 }
